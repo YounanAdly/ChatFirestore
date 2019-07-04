@@ -23,7 +23,7 @@ import java.util.*
 import com.xwray.groupie.GroupAdapter
 import java.io.ByteArrayOutputStream
 
-private const val  RC_SELECT_IMAGE = 2
+private const val RC_SELECT_IMAGE = 2
 
 class ChatActivity : AppCompatActivity() {
 
@@ -42,7 +42,11 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = intent.getStringExtra(AppConstants.USER_NAME)
 
-        val otherUserId = intent.getStringExtra(AppConstants.USER_ID)
+        FirestoreUtil.getCurrentUser {
+            currentUser = it
+        }
+
+        otherUserId = intent.getStringExtra(AppConstants.USER_ID)
         FirestoreUtil.getOrCreateChatChannel(otherUserId) { channelId ->
             currentChannelId = channelId
 
@@ -54,17 +58,17 @@ class ChatActivity : AppCompatActivity() {
                         editText_message.text.toString(),
                         Calendar.getInstance().time,
                         FirebaseAuth.getInstance().currentUser!!.uid,
-                        MessageType.TEXT
+                        otherUserId,currentUser.name
                     )
                 editText_message.setText("")
                 FirestoreUtil.sendMessage(messageToSend, channelId)
             }
             fab_send_image.setOnClickListener {
                 val intent = Intent().apply {
-                type = "image/*"
-                action = Intent.ACTION_GET_CONTENT
-                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg", "image/png"))
-            }
+                    type = "image/*"
+                    action = Intent.ACTION_GET_CONTENT
+                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/jpeg", "image/png"))
+                }
                 startActivityForResult(Intent.createChooser(intent, "Select Image"), RC_SELECT_IMAGE)
             }
         }
@@ -72,7 +76,8 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SELECT_IMAGE && resultCode == Activity.RESULT_OK &&
-            data != null && data.data != null) {
+            data != null && data.data != null
+        ) {
             val selectedImagePath = data.data
 
             val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, selectedImagePath)
@@ -85,7 +90,9 @@ class ChatActivity : AppCompatActivity() {
             StorageUtil.uploadMessageImage(selectedImageBytes) { imagePath ->
                 val messageToSend =
                     ImageMessage(imagePath, Calendar.getInstance().time,
-                        FirebaseAuth.getInstance().currentUser!!.uid)
+                        FirebaseAuth.getInstance().currentUser!!.uid,
+                                otherUserId,currentUser.name
+                    )
                 FirestoreUtil.sendMessage(messageToSend, currentChannelId)
             }
         }
