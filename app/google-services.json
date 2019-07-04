@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1081894833312",
+    "firebase_url": "https://messagefirestore.firebaseio.com",
+    "project_id": "messagefirestore",
+    "storage_bucket": "messagefirestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081894833312:android:ce8c005fd8e6fb6d",
+        "android_client_info": {
+          "package_name": "com.example.android.messagefirestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081894833312-js0hrp6t4qjrgifnqp7t8m14hd1kiou9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-KGJTvZjuiT2qLVQe14UFumcZ4TSTdHM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081894833312-js0hrp6t4qjrgifnqp7t8m14hd1kiou9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
